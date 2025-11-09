@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaMbuyisa Gallery</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+            min-height: 100vh;
+            color: #8a1c4a;
+            overflow-x: hidden;
+        }
+
+        /* Password Screen */
+        .password-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+            display: none; /* Changed from flex to none by default */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+
+        .password-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .password-container h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #d63384;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .password-container p {
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            color: #8a1c4a;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ffafbd;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .password-input:focus {
+            border-color: #d63384;
+            box-shadow: 0 0 15px rgba(214, 51, 132, 0.3);
+        }
+
+        .password-btn {
+            background: linear-gradient(to right, #d63384, #ff6b95);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(214, 51, 132, 0.4);
+        }
+
+        .password-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(214, 51, 132, 0.6);
+        }
+
+        .error-message {
+            color: #e63946;
+            margin-top: 15px;
+            font-weight: 500;
+            display: none;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #d63384;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            color: #ff6b95;
+            transform: scale(1.05);
+            text-shadow: 2px 2px 8px rgba(214, 51, 132, 0.3);
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .play-btn, .videos-btn {
+            background: linear-gradient(to right, #d63384, #ff6b95);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(214, 51, 132, 0.4);
+            text-decoration: none;
+        }
+
+        .play-btn:hover, .videos-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(214, 51, 132, 0.6);
+        }
+
+        .videos-btn {
+            background: linear-gradient(to right, #4a90e2, #6bb9ff);
+        }
+
+        .videos-btn:hover {
+            box-shadow: 0 8px 20px rgba(74, 144, 226, 0.6);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 40px;
+            display: none; /* Will be shown by JavaScript */
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            gap: 20px;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #8a1c4a;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(to right, #d63384, #ff6b95);
+            color: white;
+            box-shadow: 0 5px 15px rgba(214, 51, 132, 0.4);
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-3px);
+        }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            aspect-ratio: 1;
+            background: white;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .dream-label, .gorgeous-label {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(214, 51, 132, 0.8);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 10;
+        }
+
+        .gorgeous-label {
+            background: rgba(74, 144, 226, 0.8);
+        }
+
+        /* Updated Slideshow Container */
+        .slideshow-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+        }
+
+        .slideshow-content {
+            width: 90%;
+            height: 90%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mySlides {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mySlides.active {
+            opacity: 1;
+        }
+
+        .slide-image-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .slide-image {
+            max-width: 90%;
+            max-height: 90%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Slideshow Controls */
+        .slideshow-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 30px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+        }
+
+        .slideshow-btn {
+            background: rgba(255, 255, 255, 0.3);
+            color: #8a1c4a;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .slideshow-btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.1);
+        }
+
+        .close-slideshow {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            color: #8a1c4a;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            z-index: 300;
+        }
+
+        .close-slideshow:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.1);
+        }
+
+        /* Music Controls */
+        .music-controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 20px;
+            border-radius: 50px;
+            display: none;
+            z-index: 300;
+            backdrop-filter: blur(10px);
+        }
+
+        .music-info {
+            color: #8a1c4a;
+            font-size: 1rem;
+            font-weight: 500;
+            min-width: 220px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        /* Music Player */
+        .music-player-btn {
+            position: absolute;
+            top: 20px;
+            right: 90px;
+            background: rgba(255, 255, 255, 0.3);
+            color: #8a1c4a;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            z-index: 300;
+            display: none;
+        }
+
+        .music-player-btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.1);
+        }
+
+        .music-playlist {
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            width: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            z-index: 300;
+            backdrop-filter: blur(10px);
+        }
+
+        .music-playlist h3 {
+            color: #d63384;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.3rem;
+        }
+
+        .playlist-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(214, 51, 132, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .playlist-item:hover {
+            background: rgba(255, 182, 193, 0.2);
+            transform: translateX(5px);
+        }
+
+        .playlist-item.active {
+            background: rgba(214, 51, 132, 0.1);
+            color: #d63384;
+            font-weight: 600;
+        }
+
+        .playlist-item i {
+            color: #d63384;
+            font-size: 1.1rem;
+        }
+
+        /* Floating Hearts */
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ff6b95;
+            transform: rotate(45deg);
+            opacity: 0.7;
+            animation: float 15s infinite ease-in-out;
+            z-index: -1;
+        }
+
+        .heart:before, .heart:after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ff6b95;
+            border-radius: 50%;
+        }
+
+        .heart:before {
+            top: -10px;
+            left: 0;
+        }
+
+        .heart:after {
+            top: 0;
+            left: -10px;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(45deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(45deg);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .header-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+            
+            .tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .slideshow-content {
+                width: 95%;
+                height: 95%;
+            }
+            
+            .slide-image {
+                max-width: 95%;
+                max-height: 95%;
+            }
+            
+            .music-playlist {
+                width: 250px;
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="password-screen" id="passwordScreen">
+        <div class="password-container">
+            <h1>MaMbuyisa</h1>
+            <p>Enter the password to access the gallery</p>
+            <input type="password" class="password-input" id="passwordInput" placeholder="Enter password">
+            <button class="password-btn" onclick="checkPassword()">Enter</button>
+            <div class="error-message" id="errorMessage">Incorrect password. Please try again.</div>
+        </div>
+    </div>
+
+    
+    <div class="header" id="header">
+        <a href="me.html" class="logo">MaMbuyisa</a>
+        <div class="header-buttons">
+            <a href="vid.html" class="videos-btn">
+                <i class="fas fa-video"></i>
+                Watch Videos
+            </a>
+            <button class="play-btn" onclick="startSlideshow()">
+                <i class="fas fa-play"></i>
+                Play Slideshow
+            </button>
+        </div>
+    </div>
+
+    
+    <div class="main-content" id="mainContent">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('gorgeous')">Gorgeous</button>
+            <button class="tab-btn" onclick="showTab('dreams')">Dreams</button>
+        </div>
+
+       
+        <div class="gallery-container" id="gorgeousTab">
+            <div class="gallery-grid" id="gorgeousGrid">
+                <!-- Gorgeous pictures will be loaded here -->
+            </div>
+        </div>
+
+       
+        <div class="gallery-container" id="dreamsTab" style="display: none;">
+            <div class="gallery-grid" id="dreamsGrid">
+                <!-- Dreams will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="slideshow-container" id="slideshowContainer">
+        <div class="slideshow-content" id="slideshowContent">
+            <!-- Slides will be dynamically added here -->
+        </div>
+        
+        <div class="slideshow-controls">
+            <button class="close-slideshow" onclick="stopSlideshow()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="music-controls" id="musicControls">
+            <span class="music-info" id="songInfo">Now Playing: Bo Thata - Babalwa M</span>
+        </div>
+        
+        <!-- Music Player Button -->
+        <button class="music-player-btn" id="musicPlayerBtn" onclick="togglePlaylist()">
+            <i class="fas fa-music"></i>
+        </button>
+        
+        <!-- Music Playlist -->
+        <div class="music-playlist" id="musicPlaylist">
+            <h3>Select a Song</h3>
+            <div class="playlist-item active" onclick="changeSong(0)">
+                <i class="fas fa-play"></i>
+                Bo Thata - Babalwa M
+            </div>
+            <div class="playlist-item" onclick="changeSong(1)">
+                <i class="fas fa-play"></i>
+                Izithembiso - Babalwa M & Stixx
+            </div>
+            <div class="playlist-item" onclick="changeSong(2)">
+                <i class="fas fa-play"></i>
+                Lately - Kelvin Momo
+            </div>
+            <div class="playlist-item" onclick="changeSong(3)">
+                <i class="fas fa-play"></i>
+                The Dawn - Stixx
+            </div>
+            <div class="playlist-item" onclick="changeSong(4)">
+                <i class="fas fa-play"></i>
+                Mirror - Madison Ryann Ward
+            </div>
+            <div class="playlist-item" onclick="changeSong(5)">
+                <i class="fas fa-play"></i>
+                Streets - Doja Cat
+            </div>
+            <div class="playlist-item" onclick="changeSong(6)">
+                <i class="fas fa-play"></i>
+                Best Of Me - TSoul
+            </div>
+            <div class="playlist-item" onclick="changeSong(7)">
+                <i class="fas fa-play"></i>
+                Rich Off Pain - Lil Baby & Lil Durk
+            </div>
+            <div class="playlist-item" onclick="changeSong(8)">
+                <i class="fas fa-play"></i>
+                Late Checkout - Lil Durk
+            </div>
+            <div class="playlist-item" onclick="changeSong(9)">
+                <i class="fas fa-play"></i>
+                Fake Smiles - Phora
+            </div>
+            <div class="playlist-item" onclick="changeSong(10)">
+                <i class="fas fa-play"></i>
+                Set Me Free
+            </div>
+            <div class="playlist-item" onclick="changeSong(11)">
+                <i class="fas fa-play"></i>
+                Bloody Samaritan (Deep House Mix)
+            </div>
+            <div class="playlist-item" onclick="changeSong(12)">
+                <i class="fas fa-play"></i>
+                Wahamba
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="backgroundMusic" loop style="display: none;"></audio>
+
+    
+    <div id="heartsContainer"></div>
+
+    <script>
+        // Password
+        const PASSWORD = "My Dear";
+        
+        // Media arrays
+        const gorgeous = [];
+        const dreams = [];
+        
+        // Music playlist
+        const songs = [
+            { title: "Bo Thata - Babalwa M", src: "music/Babalwa M Ft Stixx & Nvcho - Bo Thata(Lyrics).mp3" },
+            { title: "Izithembiso - Babalwa M & Stixx", src: "music/Babalwa M & Stixx - Izithembiso _ Official Audio.mp3" },
+            { title: "Lately - Kelvin Momo", src: "music/Kelvin Momo   Lately feat  Blissful Sax.mp3" },
+            { title: "The Dawn - Stixx", src: "music/Stixx - The Dawn (Official Audio).mp3" },
+            { title: "Mirror - Madison Ryann Ward", src: "music/Madison Ryann Ward - Mirror (Lyric Video).mp3" },
+            { title: "Streets - Doja Cat", src: "music/Doja Cat - Streets (Official Audio).mp3" },
+            { title: "Best Of Me - TSoul", src: "music/TSoul - Best Of Me (Lyrics).mp3" },
+            { title: "Rich Off Pain - Lil Baby & Lil Durk", src: "music/Lil Baby & Lil Durk Feat. Rod Wave - Rich Off Pain (Official Audio).mp3" },
+            { title: "Late Checkout - Lil Durk", src: "music/Lil Durk - Late Checkout (feat. Hunxho).mp3" },
+            { title: "Fake Smiles - Phora", src: "music/Phora - Fake Smiles.mp3" },
+            { title: "Set Me Free", src: "music/Set Me Free.mp3" },
+            { title: "Bloody Samaritan (Deep House Mix)", src: "music/Bloody Samaritan (Deep House Mix).mp3" },
+            { title: "Wahamba", src: "music/Wahamba.mp3" }
+        ];
+        
+        let currentSongIndex = 0;
+        
+        // Populate media arrays - updated to start from 1.jpg to 36.jpg
+        // 36.jpg will be the first picture in the Gorgeous section
+        for (let i = 1; i <= 36; i++) {
+            gorgeous.push(`pics/${i}.jpg`);
+        }
+        
+        // Load dreams from future subfolder (1.jpeg to 15.jpeg)
+        for (let i = 1; i <= 15; i++) {
+            dreams.push(`future/${i}.jpeg`);
+        }
+        
+        // Slideshow variables
+        let slideIndex = 0;
+        let slideshowInterval;
+        let isPlaying = false;
+        let isSlideshowActive = false;
+        const audio = document.getElementById('backgroundMusic');
+        let isMusicPlaying = false;
+        
+        // Extended CapCut Style Animations - 15 unique animations
+        const animations = [
+            'glitch-in', 'morph-in', 'neon-in', 'hologram-in', 
+            'particle-in', 'liquid-in', 'matrix-in', 'cyber-in',
+            'float-in', 'wave-in', 'zoom-rotate-in', 'slide-flip-in',
+            'bounce-in', 'swirl-in', 'fade-zoom-in'
+        ];
+
+        // Track used animations to ensure variety
+        let usedAnimations = new Set();
+
+        // Check if user is already authenticated - runs immediately
+        function checkAuthentication() {
+            const isAuthenticated = sessionStorage.getItem('mambuyisaAuthenticated');
+            if (isAuthenticated === 'true') {
+                // User is authenticated - show main content immediately
+                document.getElementById('mainContent').style.display = 'block';
+                loadGallery();
+                createHearts();
+                return true;
+            } else {
+                // User is not authenticated - show password screen
+                document.getElementById('passwordScreen').style.display = 'flex';
+                return false;
+            }
+        }
+
+        // Create floating hearts
+        function createHearts() {
+            const heartsContainer = document.getElementById('heartsContainer');
+            const heartCount = 15;
+            
+            for (let i = 0; i < heartCount; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                
+                // Random size
+                const size = Math.random() * 20 + 10;
+                heart.style.width = `${size}px`;
+                heart.style.height = `${size}px`;
+                heart.style.left = `${Math.random() * 100}vw`;
+                heart.style.top = `${Math.random() * 100}vh`;
+                
+                // Random color
+                const hue = Math.random() * 20 + 330; 
+                heart.style.background = `hsl(${hue}, 70%, 70%)`;
+                heart.style.opacity = Math.random() * 0.5 + 0.3;
+                
+                // Random animation
+                heart.style.animationDuration = `${Math.random() * 10 + 10}s`;
+                heart.style.animationDelay = `${Math.random() * 5}s`;
+                
+                heartsContainer.appendChild(heart);
+            }
+        }
+        
+        // Password check
+        function checkPassword() {
+            const passwordInput = document.getElementById('passwordInput');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            if (passwordInput.value === PASSWORD) {
+                // Store authentication in sessionStorage
+                sessionStorage.setItem('mambuyisaAuthenticated', 'true');
+                
+                // Hide password screen and show main content
+                document.getElementById('passwordScreen').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                loadGallery();
+                createHearts();
+            } else {
+                errorMessage.style.display = 'block';
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        }
+        
+        // Enter key for password
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+        
+        // Load gallery
+        function loadGallery() {
+            const gorgeousGrid = document.getElementById('gorgeousGrid');
+            const dreamsGrid = document.getElementById('dreamsGrid');
+            
+            // Load gorgeous pictures - 36.jpg will be first
+            gorgeous.forEach((gorgeousPic, index) => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-item';
+                galleryItem.onclick = () => openMedia('gorgeous', index);
+                
+                const img = document.createElement('img');
+                img.src = gorgeousPic;
+                img.alt = `Gorgeous ${index + 1}`;
+                img.onerror = function() {
+                    this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmY2Yjk1Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2ZmZmZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkdvcmdlb3VzIDwvdGV4dD48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE4IiBmaWxsPSIjZmZmZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMWVtIj4raW5kZXgrMTwvdGV4dD48L3N2Zz4=';
+                };
+                
+                const gorgeousLabel = document.createElement('div');
+                gorgeousLabel.className = 'gorgeous-label';
+                gorgeousLabel.innerHTML = '<i class="fas fa-heart"></i> Gorgeous';
+                
+                galleryItem.appendChild(img);
+                galleryItem.appendChild(gorgeousLabel);
+                gorgeousGrid.appendChild(galleryItem);
+            });
+            
+            // Load dreams
+            dreams.forEach((dream, index) => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-item';
+                galleryItem.onclick = () => openMedia('dream', index);
+                
+                const img = document.createElement('img');
+                img.src = dream;
+                img.alt = `Dream ${index + 1}`;
+                img.onerror = function() {
+                    this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmY2Yjk1Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2ZmZmZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkRyZWFtIDwvdGV4dD48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE4IiBmaWxsPSIjZmZmZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMWVtIj4raW5kZXgrMTwvdGV4dD48L3N2Zz4=';
+                };
+                
+                const dreamLabel = document.createElement('div');
+                dreamLabel.className = 'dream-label';
+                dreamLabel.innerHTML = '<i class="fas fa-star"></i> Dream';
+                
+                galleryItem.appendChild(img);
+                galleryItem.appendChild(dreamLabel);
+                dreamsGrid.appendChild(galleryItem);
+            });
+        }
+        
+        // Show tab
+        function showTab(tabName) {
+            document.getElementById('gorgeousTab').style.display = 'none';
+            document.getElementById('dreamsTab').style.display = 'none';
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (tabName === 'gorgeous') {
+                document.getElementById('gorgeousTab').style.display = 'block';
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            } else {
+                document.getElementById('dreamsTab').style.display = 'block';
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            }
+        }
+        
+        // Get unique animation
+        function getUniqueAnimation() {
+            // Reset used animations if all have been used
+            if (usedAnimations.size >= animations.length) {
+                usedAnimations.clear();
+            }
+            
+            let availableAnimations = animations.filter(anim => !usedAnimations.has(anim));
+            
+            // If no unique animations available, use any animation
+            if (availableAnimations.length === 0) {
+                availableAnimations = animations;
+            }
+            
+            const randomAnimation = availableAnimations[Math.floor(Math.random() * availableAnimations.length)];
+            usedAnimations.add(randomAnimation);
+            
+            return randomAnimation;
+        }
+        
+        // Start slideshow
+        function startSlideshow() {
+            if (isSlideshowActive) return;
+            
+            isSlideshowActive = true;
+            
+            // Hide gallery elements
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('header').style.display = 'none';
+            
+            // Show slideshow elements
+            document.getElementById('slideshowContainer').style.display = 'flex';
+            document.getElementById('musicControls').style.display = 'flex';
+            document.getElementById('musicPlayerBtn').style.display = 'flex';
+            
+            // Create slides
+            createSlides();
+            
+            // Start music with first song
+            changeSong(currentSongIndex);
+            
+            // Start slideshow
+            isPlaying = true;
+            showSlides();
+        }
+        
+        // Create slides dynamically
+        function createSlides() {
+            const slideshowContent = document.getElementById('slideshowContent');
+            
+            // Clear existing slides
+            slideshowContent.innerHTML = '';
+            
+            // Create slides for all media (gorgeous + dreams)
+            const allMedia = [
+                ...gorgeous.map(g => ({type: 'gorgeous', src: g})), 
+                ...dreams.map(d => ({type: 'dream', src: d}))
+            ];
+            
+            allMedia.forEach((media, index) => {
+                const slide = document.createElement('div');
+                slide.className = 'mySlides';
+                
+                const imageContainer = document.createElement('div');
+                imageContainer.className = 'slide-image-container';
+                
+                const img = document.createElement('img');
+                img.className = 'slide-image';
+                img.src = media.src;
+                img.alt = `Slide ${index + 1}`;
+                img.onerror = function() {
+                    this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmY2Yjk1Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZmlsbD0iI2ZmZmZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlIG5vdCBmb3VuZDwvdGV4dD48L3N2Zz4=';
+                };
+                
+                imageContainer.appendChild(img);
+                slide.appendChild(imageContainer);
+                slideshowContent.appendChild(slide);
+            });
+        }
+        
+        // Show slides
+        function showSlides() {
+            if (!isSlideshowActive) return;
+            
+            let slides = document.getElementsByClassName("mySlides");
+            
+            // Remove active class from current slide
+            if (slides[slideIndex]) {
+                slides[slideIndex].classList.remove("active");
+                // Remove all animation classes from current slide
+                animations.forEach(anim => slides[slideIndex].classList.remove(anim));
+            }
+            
+            // Move to next slide
+            slideIndex++;
+            if (slideIndex >= slides.length) {slideIndex = 0}
+            
+            // Get unique animation for this slide
+            const uniqueAnimation = getUniqueAnimation();
+            
+            // Show new slide with unique animation
+            slides[slideIndex].classList.add("active");
+            slides[slideIndex].classList.add(uniqueAnimation);
+            
+            // Continue slideshow
+            if (isPlaying) {
+                slideshowInterval = setTimeout(showSlides, 5000);
+            }
+        }
+        
+        // Stop slideshow
+        function stopSlideshow() {
+            isSlideshowActive = false;
+            isPlaying = false;
+            
+            // Stop slideshow
+            clearTimeout(slideshowInterval);
+            
+            // Stop music
+            audio.pause();
+            isMusicPlaying = false;
+            
+            // Show gallery elements
+            document.getElementById('mainContent').style.display = 'block';
+            document.getElementById('header').style.display = 'flex';
+            
+            // Hide slideshow elements
+            document.getElementById('slideshowContainer').style.display = 'none';
+            document.getElementById('musicControls').style.display = 'none';
+            document.getElementById('musicPlayerBtn').style.display = 'none';
+            document.getElementById('musicPlaylist').style.display = 'none';
+        }
+        
+        // Open media
+        function openMedia(type, index) {
+            let allMedia;
+            
+            if (type === 'gorgeous') {
+                allMedia = [{type: 'gorgeous', src: gorgeous[index]}];
+            } else {
+                allMedia = [{type: 'dream', src: dreams[index]}];
+            }
+            
+            createCustomSlideshow(allMedia);
+        }
+        
+        // Create custom slideshow for single media
+        function createCustomSlideshow(media) {
+            isSlideshowActive = true;
+            
+            // Hide gallery elements
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('header').style.display = 'none';
+            
+            // Show slideshow elements
+            document.getElementById('slideshowContainer').style.display = 'flex';
+            document.getElementById('musicPlayerBtn').style.display = 'flex';
+            
+            // Create slides
+            const slideshowContent = document.getElementById('slideshowContent');
+            
+            // Clear existing slides
+            slideshowContent.innerHTML = '';
+            
+            media.forEach((item, index) => {
+                const slide = document.createElement('div');
+                slide.className = 'mySlides active';
+                
+                const imageContainer = document.createElement('div');
+                imageContainer.className = 'slide-image-container';
+                
+                const img = document.createElement('img');
+                img.className = 'slide-image';
+                img.src = item.src;
+                img.alt = `Slide ${index + 1}`;
+                img.onerror = function() {
+                    this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmY2Yjk1Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZmlsbD0iI2ZmZmZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlIG5vdCBmb3VuZDwvdGV4dD48L3N2Zz4=';
+                };
+                
+                imageContainer.appendChild(img);
+                slide.appendChild(imageContainer);
+                slideshowContent.appendChild(slide);
+            });
+            
+            slideIndex = 0;
+        }
+        
+        // Music player functions
+        function togglePlaylist() {
+            const playlist = document.getElementById('musicPlaylist');
+            if (playlist.style.display === 'block') {
+                playlist.style.display = 'none';
+            } else {
+                playlist.style.display = 'block';
+            }
+        }
+        
+        function changeSong(index) {
+            currentSongIndex = index;
+            const song = songs[index];
+            
+            // Update audio source
+            audio.src = song.src;
+            
+            // Update song info
+            document.getElementById('songInfo').textContent = `Now Playing: ${song.title}`;
+            
+            // Update playlist active item
+            const playlistItems = document.querySelectorAll('.playlist-item');
+            playlistItems.forEach(item => item.classList.remove('active'));
+            playlistItems[index].classList.add('active');
+            
+            // Play the song
+            audio.play().then(() => {
+                isMusicPlaying = true;
+            }).catch(error => {
+                console.log("Audio play failed:", error);
+                // Try to play with user interaction
+                document.addEventListener('click', function tryPlayOnce() {
+                    audio.play().then(() => {
+                        isMusicPlaying = true;
+                    }).catch(e => {
+                        console.log("Audio still failed:", e);
+                    });
+                    document.removeEventListener('click', tryPlayOnce);
+                });
+            });
+            
+            // Hide playlist after selection
+            document.getElementById('musicPlaylist').style.display = 'none';
+        }
+        
+        // Initialize on page load
+        window.addEventListener('load', function() {
+            // Check authentication immediately - this determines what to show
+            checkAuthentication();
+            audio.volume = 0.5;
+            
+            // Set up audio error handling
+            audio.addEventListener('error', function(e) {
+                console.log("Audio error:", e);
+                // Try next song if current one fails
+                if (currentSongIndex < songs.length - 1) {
+                    changeSong(currentSongIndex + 1);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

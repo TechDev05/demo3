@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lisiwe Anthony | Personal Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+            min-height: 100vh;
+            color: #8a1c4a;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #d63384;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            color: #ff6b95;
+            transform: scale(1.05);
+            text-shadow: 2px 2px 8px rgba(214, 51, 132, 0.3);
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: linear-gradient(to right, #4a90e2, #6bb9ff);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(74, 144, 226, 0.6);
+        }
+
+        /* Music Player Controls */
+        .music-player {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 12px 20px;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .music-info {
+            color: #8a1c4a;
+            font-size: 0.9rem;
+            font-weight: 500;
+            min-width: 180px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .music-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .music-btn {
+            background: rgba(214, 51, 132, 0.2);
+            color: #d63384;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .music-btn:hover {
+            background: rgba(214, 51, 132, 0.3);
+            transform: scale(1.1);
+        }
+
+        .playlist-btn {
+            background: rgba(74, 144, 226, 0.2);
+            color: #4a90e2;
+        }
+
+        .playlist-btn:hover {
+            background: rgba(74, 144, 226, 0.3);
+        }
+
+        /* Music Playlist */
+        .music-playlist {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            width: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .music-playlist h3 {
+            color: #d63384;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.3rem;
+        }
+
+        .playlist-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(214, 51, 132, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .playlist-item:hover {
+            background: rgba(255, 182, 193, 0.2);
+            transform: translateX(5px);
+        }
+
+        .playlist-item.active {
+            background: rgba(214, 51, 132, 0.1);
+            color: #d63384;
+            font-weight: 600;
+        }
+
+        .playlist-item i {
+            color: #d63384;
+            font-size: 1.1rem;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #d63384, #ff6b95);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Content layout - Updated for elongated slideshow */
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 30px;
+        }
+
+        .text-content {
+            flex: 1;
+            min-width: 300px;
+            padding-right: 20px;
+        }
+
+        .slideshow-container {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+        }
+
+        /* First slideshow special styling - Now spans full height */
+        .first-content {
+            display: flex;
+            padding: 30px;
+            gap: 30px;
+        }
+
+        .first-text-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .first-slideshow-container {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            height: auto;
+        }
+
+        .first-slideshow {
+            height: 100%;
+            min-height: 600px;
+        }
+
+        /* Paragraph styling */
+        .paragraph {
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .paragraph:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        h2 {
+            color: #d63384;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #ffafbd;
+            padding-bottom: 8px;
+        }
+
+        /* Slideshow styling */
+        .slideshow {
+            position: relative;
+            height: 300px;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f0f0;
+            color: #888;
+            font-size: 1.2rem;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Slideshow Controls */
+        .slideshow-controls {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 20px;
+            border-radius: 50px;
+        }
+
+        .slideshow-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .slideshow-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.1);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: rgba(245, 245, 245, 0.7);
+            color: #8a1c4a;
+            border-top: 1px solid #ffafbd;
+        }
+
+        /* Enhanced Floating Elements */
+        .floating-element {
+            position: fixed;
+            z-index: -1;
+            pointer-events: none;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .heart {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #ff6b95, #d63384);
+            transform: rotate(45deg);
+            opacity: 0.8;
+            animation: floatUp 20s infinite ease-in-out;
+        }
+
+        .heart:before, .heart:after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #ff6b95, #d63384);
+            border-radius: 50%;
+        }
+
+        .heart:before {
+            top: -15px;
+            left: 0;
+        }
+
+        .heart:after {
+            top: 0;
+            left: -15px;
+        }
+
+        .flower {
+            width: 35px;
+            height: 35px;
+            animation: floatUp 25s infinite ease-in-out;
+            opacity: 0.7;
+        }
+
+        .flower-petal {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: linear-gradient(135deg, #ff9eb5, #ff6b95);
+            border-radius: 50% 50% 50% 0;
+            transform-origin: center;
+        }
+
+        .flower-petal:nth-child(1) { transform: rotate(0deg) translateY(-12px); }
+        .flower-petal:nth-child(2) { transform: rotate(60deg) translateY(-12px); }
+        .flower-petal:nth-child(3) { transform: rotate(120deg) translateY(-12px); }
+        .flower-petal:nth-child(4) { transform: rotate(180deg) translateY(-12px); }
+        .flower-petal:nth-child(5) { transform: rotate(240deg) translateY(-12px); }
+        .flower-petal:nth-child(6) { transform: rotate(300deg) translateY(-12px); }
+
+        .flower-center {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #ffd700;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .pink-flower {
+            width: 40px;
+            height: 40px;
+            animation: floatUp 30s infinite ease-in-out;
+            opacity: 0.8;
+        }
+
+        .pink-flower-petal {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(135deg, #ffafbd, #ff6b95);
+            border-radius: 50% 50% 50% 0;
+            transform-origin: center;
+        }
+
+        .pink-flower-petal:nth-child(1) { transform: rotate(0deg) translateY(-15px); }
+        .pink-flower-petal:nth-child(2) { transform: rotate(45deg) translateY(-15px); }
+        .pink-flower-petal:nth-child(3) { transform: rotate(90deg) translateY(-15px); }
+        .pink-flower-petal:nth-child(4) { transform: rotate(135deg) translateY(-15px); }
+        .pink-flower-petal:nth-child(5) { transform: rotate(180deg) translateY(-15px); }
+        .pink-flower-petal:nth-child(6) { transform: rotate(225deg) translateY(-15px); }
+        .pink-flower-petal:nth-child(7) { transform: rotate(270deg) translateY(-15px); }
+        .pink-flower-petal:nth-child(8) { transform: rotate(315deg) translateY(-15px); }
+
+        .pink-flower-center {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: #ffb6c1;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .first-content {
+                flex-direction: column;
+            }
+            
+            .content {
+                flex-direction: column;
+            }
+            
+            .text-content, .slideshow-container, .first-slideshow-container {
+                padding-right: 0;
+                width: 100%;
+            }
+            
+            .slideshow, .first-slideshow {
+                height: 250px;
+                min-height: 250px;
+            }
+            
+            .first-slideshow-container {
+                height: auto;
+            }
+            
+            .floating-element {
+                transform: scale(0.7);
+            }
+            
+            .music-player {
+                top: 10px;
+                right: 10px;
+                padding: 8px 15px;
+            }
+            
+            .music-info {
+                min-width: 150px;
+                font-size: 0.8rem;
+            }
+            
+            .music-playlist {
+                width: 250px;
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with back button -->
+    <div class="header">
+        <a href="index.html" class="logo">Lisiwe Anthony</a>
+        <div class="header-buttons">
+            <a href="index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Back to Gallery
+            </a>
+        </div>
+    </div>
+
+    <!-- Music Player -->
+    <div class="music-player" id="musicPlayer">
+        <div class="music-info" id="songInfo">
+            <i class="fas fa-music"></i>
+            <span id="currentSong">Bo Thata - Babalwa M</span>
+        </div>
+        <div class="music-controls">
+            <button class="music-btn" id="playPauseBtn" onclick="togglePlayPause()">
+                <i class="fas fa-pause" id="playPauseIcon"></i>
+            </button>
+            <button class="music-btn playlist-btn" onclick="togglePlaylist()">
+                <i class="fas fa-list"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Music Playlist -->
+    <div class="music-playlist" id="musicPlaylist">
+        <h3>Select a Song</h3>
+        <div class="playlist-item active" onclick="changeSong(0)">
+            <i class="fas fa-play"></i>
+            Bo Thata - Babalwa M
+        </div>
+        <div class="playlist-item" onclick="changeSong(1)">
+            <i class="fas fa-play"></i>
+            Izithembiso - Babalwa M & Stixx
+        </div>
+        <div class="playlist-item" onclick="changeSong(2)">
+            <i class="fas fa-play"></i>
+            Lately - Kelvin Momo
+        </div>
+        <div class="playlist-item" onclick="changeSong(3)">
+            <i class="fas fa-play"></i>
+            The Dawn - Stixx
+        </div>
+        <div class="playlist-item" onclick="changeSong(4)">
+            <i class="fas fa-play"></i>
+            Mirror - Madison Ryann Ward
+        </div>
+        <div class="playlist-item" onclick="changeSong(5)">
+            <i class="fas fa-play"></i>
+            Streets - Doja Cat
+        </div>
+        <div class="playlist-item" onclick="changeSong(6)">
+            <i class="fas fa-play"></i>
+            Best Of Me - TSoul
+        </div>
+        <div class="playlist-item" onclick="changeSong(7)">
+            <i class="fas fa-play"></i>
+            Rich Off Pain - Lil Baby & Lil Durk
+        </div>
+        <div class="playlist-item" onclick="changeSong(8)">
+            <i class="fas fa-play"></i>
+            Late Checkout - Lil Durk
+        </div>
+        <div class="playlist-item" onclick="changeSong(9)">
+            <i class="fas fa-play"></i>
+            Fake Smiles - Phora
+        </div>
+        <div class="playlist-item" onclick="changeSong(10)">
+            <i class="fas fa-play"></i>
+            Set Me Free
+        </div>
+        <div class="playlist-item" onclick="changeSong(11)">
+            <i class="fas fa-play"></i>
+            Bloody Samaritan (Deep House Mix)
+        </div>
+        <div class="playlist-item" onclick="changeSong(12)">
+            <i class="fas fa-play"></i>
+            Wahamba
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Lisiwe Anthony</h1>
+            <p class="tagline">Political Science Student | Dreamer | Kindness Advocate</p>
+        </div>
+        
+        <!-- First section with elongated slideshow -->
+        <div class="first-content">
+            <div class="first-text-content">
+                <div class="paragraph">
+                    <h2>About Me</h2>
+                    <p>Hey, I'm Lisiwe Anthony! Born and bred in Port Shepstone, I'm a bubbly and playful person who loves laughing and spreading kindness. Currently studying Political Science in Local Government at DUT, I'm passionate about motivating others and making a positive impact.</p>
+                </div>
+                
+                <div class="paragraph">
+                    <h2>My Interests</h2>
+                    <p>When I'm not hitting the books, you can find me getting lost in a good novel, sweating it out at the gym, or whipping up something delicious in the kitchen. I'm a music lover, with deep house and amapiano being my jam - shoutout to Knightsa89, Rosetta Deep, Kelvin Momo, Babalwa M, and Kabza De Small!</p>
+                </div>
+                
+                <div class="paragraph">
+                    <h2>Living Life Fully</h2>
+                    <p>I'm all about living life to the fullest, whether that's sipping wine on a date, dancing the night away, or capturing life's moments through photography. I'm a bit of a homebody, but I love a good photoshoot - especially when it involves food, nature, or just me being me 😊.</p>
+                </div>
+            </div>
+            
+            <div class="first-slideshow-container">
+                <div class="slideshow first-slideshow" id="slideshow1">
+                    <!-- Slides will be dynamically added here with 36.jpg first -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="text-content">
+                <div class="paragraph">
+                    <h2>My Dreams</h2>
+                    <p>My dreams are big: I want to travel the world 🌎, own a cruise liner and a few hotels, and experience the energy of live concerts - especially amapiano shows featuring my faves! I'm aiming to graduate with Dean's merit cum laude, and then take my passion for supply chain to the next level, pursuing advanced studies and building my own logistics company.</p>
+                </div>
+            </div>
+            
+            <div class="slideshow-container">
+                <div class="slideshow" id="slideshow2">
+                    <!-- Slides will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="text-content">
+                <div class="paragraph">
+                    <h2>Leisure & Lifestyle</h2>
+                    <p>When I'm not chasing my dreams, you can find me enjoying leisurely games, playing board games, or just having a chill evening with friends. And, of course, I'm dreaming of cruising around in my Mercerd G63 Brabus or Polo Gti 8 Stanced 🚗💨</p>
+                </div>
+            </div>
+            
+            <div class="slideshow-container">
+                <div class="slideshow" id="slideshow3">
+                    <!-- Slides will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2025 Lisiwe Anthony❤️ | All Rights Reserved</p>
+        </footer>
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="backgroundMusic" loop style="display: none;"></audio>
+
+    <div id="floatingElements"></div>
+
+    <script>
+        // Image arrays with correct paths
+        const picsImages = [];
+        const futureImages1 = [];
+        const futureImages2 = [];
+        
+        // Music playlist
+        const songs = [
+            { title: "Bo Thata - Babalwa M", src: "music/Babalwa M Ft Stixx & Nvcho - Bo Thata(Lyrics).mp3" },
+            { title: "Izithembiso - Babalwa M & Stixx", src: "music/Babalwa M & Stixx - Izithembiso _ Official Audio.mp3" },
+            { title: "Lately - Kelvin Momo", src: "music/Kelvin Momo   Lately feat  Blissful Sax.mp3" },
+            { title: "The Dawn - Stixx", src: "music/Stixx - The Dawn (Official Audio).mp3" },
+            { title: "Mirror - Madison Ryann Ward", src: "music/Madison Ryann Ward - Mirror (Lyric Video).mp3" },
+            { title: "Streets - Doja Cat", src: "music/Doja Cat - Streets (Official Audio).mp3" },
+            { title: "Best Of Me - TSoul", src: "music/TSoul - Best Of Me (Lyrics).mp3" },
+            { title: "Rich Off Pain - Lil Baby & Lil Durk", src: "music/Lil Baby & Lil Durk Feat. Rod Wave - Rich Off Pain (Official Audio).mp3" },
+            { title: "Late Checkout - Lil Durk", src: "music/Lil Durk - Late Checkout (feat. Hunxho).mp3" },
+            { title: "Fake Smiles - Phora", src: "music/Phora - Fake Smiles.mp3" },
+            { title: "Set Me Free", src: "music/Set Me Free.mp3" },
+            { title: "Bloody Samaritan (Deep House Mix)", src: "music/Bloody Samaritan (Deep House Mix).mp3" },
+            { title: "Wahamba", src: "music/Wahamba.mp3" }
+        ];
+        
+        let currentSongIndex = 0;
+        let isPlaying = true;
+        const audio = document.getElementById('backgroundMusic');
+        
+        // Populate pics images (1 to 36) with 36.jpg as first image
+        for (let i = 1; i <= 36; i++) {
+            picsImages.push(`pics/${i}.jpg`);
+        }
+        
+        // Reorder to make 36.jpg the first image
+        picsImages.unshift(picsImages.pop());
+        
+        // Populate future images for second slideshow (5, 10, 15)
+        futureImages1.push('future/5.jpeg', 'future/10.jpeg', 'future/15.jpeg');
+        
+        // Populate future images for third slideshow (1, 2, 7, 12)
+        futureImages2.push('future/1.jpeg', 'future/2.jpeg', 'future/7.jpeg', 'future/12.jpeg');
+        
+        // Initialize slideshows
+        function initSlideshow(slideshowId, images, interval = 4000) {
+            const slideshow = document.getElementById(slideshowId);
+            
+            // Clear existing content
+            slideshow.innerHTML = '';
+            
+            // Create slides
+            images.forEach((imageSrc, index) => {
+                const slide = document.createElement('div');
+                slide.className = `slide ${index === 0 ? 'active' : ''}`;
+                
+                const img = document.createElement('img');
+                img.src = imageSrc;
+                img.alt = `Image ${index + 1}`;
+                img.onerror = function() {
+                    // Fallback if image doesn't exist
+                    this.style.display = 'none';
+                    slide.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; background: linear-gradient(135deg, #ffafbd, #ffc3a0); color: white; font-size: 1.2rem;">Image ${index + 1}</div>`;
+                };
+                
+                slide.appendChild(img);
+                slideshow.appendChild(slide);
+            });
+            
+            // Add controls
+            const controls = document.createElement('div');
+            controls.className = 'slideshow-controls';
+            controls.innerHTML = `
+                <button class="slideshow-btn prev-btn" onclick="changeSlide('${slideshowId}', -1)">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="slideshow-btn next-btn" onclick="changeSlide('${slideshowId}', 1)">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            `;
+            slideshow.appendChild(controls);
+            
+            // Set interval for automatic slideshow
+            const slideshowInterval = setInterval(() => {
+                changeSlide(slideshowId, 1);
+            }, interval);
+            
+            // Store interval ID for cleanup
+            slideshow.dataset.intervalId = slideshowInterval;
+        }
+        
+        // Manual slide change
+        function changeSlide(slideshowId, direction) {
+            const slideshow = document.getElementById(slideshowId);
+            const slides = slideshow.querySelectorAll('.slide');
+            let currentSlide = 0;
+            
+            // Find current active slide
+            for (let i = 0; i < slides.length; i++) {
+                if (slides[i].classList.contains('active')) {
+                    currentSlide = i;
+                    break;
+                }
+            }
+            
+            // Calculate new slide index
+            let newSlide = currentSlide + direction;
+            if (newSlide < 0) {
+                newSlide = slides.length - 1;
+            } else if (newSlide >= slides.length) {
+                newSlide = 0;
+            }
+            
+            // Update slides
+            slides[currentSlide].classList.remove('active');
+            slides[newSlide].classList.add('active');
+            
+            // Reset the automatic slideshow interval
+            clearInterval(slideshow.dataset.intervalId);
+            slideshow.dataset.intervalId = setInterval(() => {
+                changeSlide(slideshowId, 1);
+            }, 4000);
+        }
+        
+        // Create enhanced floating elements (hearts and flowers)
+        function createFloatingElements() {
+            const container = document.getElementById('floatingElements');
+            const elementCount = 25;
+            
+            for (let i = 0; i < elementCount; i++) {
+                const element = document.createElement('div');
+                element.className = 'floating-element';
+                
+                // Random position at bottom
+                element.style.left = `${Math.random() * 100}vw`;
+                element.style.bottom = '-50px';
+                
+                // Random delay
+                element.style.animationDelay = `${Math.random() * 20}s`;
+                
+                // Random element type (heart, flower, or pink flower)
+                const elementType = Math.floor(Math.random() * 3);
+                
+                if (elementType === 0) {
+                    // Heart
+                    element.classList.add('heart');
+                } else if (elementType === 1) {
+                    // Flower
+                    element.classList.add('flower');
+                    for (let j = 0; j < 6; j++) {
+                        const petal = document.createElement('div');
+                        petal.className = 'flower-petal';
+                        element.appendChild(petal);
+                    }
+                    const center = document.createElement('div');
+                    center.className = 'flower-center';
+                    element.appendChild(center);
+                } else {
+                    // Pink flower
+                    element.classList.add('pink-flower');
+                    for (let j = 0; j < 8; j++) {
+                        const petal = document.createElement('div');
+                        petal.className = 'pink-flower-petal';
+                        element.appendChild(petal);
+                    }
+                    const center = document.createElement('div');
+                    center.className = 'pink-flower-center';
+                    element.appendChild(center);
+                }
+                
+                // Random size variation
+                const size = 0.7 + Math.random() * 0.6;
+                element.style.transform = `scale(${size})`;
+                
+                // Random animation duration
+                const duration = 15 + Math.random() * 20;
+                element.style.animationDuration = `${duration}s`;
+                
+                container.appendChild(element);
+            }
+        }
+        
+        // Music player functions
+        function togglePlaylist() {
+            const playlist = document.getElementById('musicPlaylist');
+            if (playlist.style.display === 'block') {
+                playlist.style.display = 'none';
+            } else {
+                playlist.style.display = 'block';
+            }
+        }
+        
+        function togglePlayPause() {
+            if (isPlaying) {
+                audio.pause();
+                document.getElementById('playPauseIcon').className = 'fas fa-play';
+                isPlaying = false;
+            } else {
+                audio.play().catch(error => {
+                    console.log("Audio play failed:", error);
+                });
+                document.getElementById('playPauseIcon').className = 'fas fa-pause';
+                isPlaying = true;
+            }
+        }
+        
+        function changeSong(index) {
+            currentSongIndex = index;
+            const song = songs[index];
+            
+            // Update audio source
+            audio.src = song.src;
+            
+            // Update song info
+            document.getElementById('currentSong').textContent = song.title;
+            
+            // Update playlist active item
+            const playlistItems = document.querySelectorAll('.playlist-item');
+            playlistItems.forEach(item => item.classList.remove('active'));
+            playlistItems[index].classList.add('active');
+            
+            // Play the song
+            audio.play().then(() => {
+                isPlaying = true;
+                document.getElementById('playPauseIcon').className = 'fas fa-pause';
+            }).catch(error => {
+                console.log("Audio play failed:", error);
+                // Try to play with user interaction
+                document.addEventListener('click', function tryPlayOnce() {
+                    audio.play().then(() => {
+                        isPlaying = true;
+                        document.getElementById('playPauseIcon').className = 'fas fa-pause';
+                    }).catch(e => {
+                        console.log("Audio still failed:", e);
+                    });
+                    document.removeEventListener('click', tryPlayOnce);
+                });
+            });
+            
+            // Hide playlist after selection
+            document.getElementById('musicPlaylist').style.display = 'none';
+        }
+        
+        // Initialize all slideshows and create floating elements
+        document.addEventListener('DOMContentLoaded', function() {
+            initSlideshow('slideshow1', picsImages);
+            initSlideshow('slideshow2', futureImages1);
+            initSlideshow('slideshow3', futureImages2);
+            createFloatingElements();
+            
+            // Start playing music automatically
+            audio.volume = 0.5;
+            changeSong(currentSongIndex);
+            
+            // Set up audio error handling
+            audio.addEventListener('error', function(e) {
+                console.log("Audio error:", e);
+                // Try next song if current one fails
+                if (currentSongIndex < songs.length - 1) {
+                    changeSong(currentSongIndex + 1);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
